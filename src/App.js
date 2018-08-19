@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { graphql } from "react-apollo";
+import { graphql, withApollo } from "react-apollo";
 import gql from "graphql-tag";
 
 class App extends Component {
@@ -36,7 +36,7 @@ class App extends Component {
   }
 }
 
-export default graphql(
+export default withApollo(graphql(
   gql`
     query ErrorTemplate {
       people {
@@ -44,5 +44,16 @@ export default graphql(
         name
       }
     }
-  `
-)(App);
+  `,
+  {
+    props: ({ data: { loading, people }, client }) => {
+      console.log('client', client)
+      return {
+        data: {
+          loading,
+          people,
+        }
+      }
+    }
+  }
+)(App));
